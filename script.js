@@ -12,6 +12,18 @@ const questions = [
   { question: "安心できるサービスがいい" },
 ];
 
+// 解析演出画面のプログレス値（0% → 100%）
+const LOADING_PROGRESS_STEPS = [0, 25, 48, 76, 100];
+// 解析演出の合計時間（約1.5秒）
+const LOADING_TOTAL_DURATION = 1500;
+
+// 結果タイプ（今回は分岐ロジックなしのため固定値だが、
+// 将来的に answers の内容で出し分けたい場合はここを拡張する）
+const RESULT_TYPE = {
+  name: "【安心・時短重視タイプ】",
+  desc: "あなたは、安心して利用できることと、忙しい毎日でも無理なく続けられるサービスを重視する傾向があります。",
+};
+
 // 回答を保持する配列（分岐ロジックには使用しないが、
 // 将来的な拡張・計測のために保持しておく）
 const answers = [];
@@ -24,7 +36,10 @@ let currentIndex = 0;
 // ============================================================
 const screenTop = document.getElementById("screen-top");
 const screenQuiz = document.getElementById("screen-quiz");
+const screenLoading = document.getElementById("screen-loading");
 const screenResult = document.getElementById("screen-result");
+
+const allScreens = [screenTop, screenQuiz, screenLoading, screenResult];
 
 const btnStart = document.getElementById("btn-start");
 const btnYes = document.getElementById("btn-yes");
@@ -37,6 +52,14 @@ const progressLabel = document.getElementById("progress-label");
 const progressFill = document.getElementById("progress-fill");
 const progressBarWrap = document.getElementById("progress-bar-wrap");
 
+const loadingBarFill = document.getElementById("loading-bar-fill");
+const loadingPercent = document.getElementById("loading-percent");
+const loadingBarWrap = document.getElementById("loading-bar-wrap");
+const loadingSteps = document.querySelectorAll(".loading__step");
+
+const typeCardName = document.getElementById("type-card-name");
+const typeCardDesc = document.getElementById("type-card-desc");
+
 const fixedCta = document.getElementById("fixed-cta");
 
 // ============================================================
@@ -44,7 +67,7 @@ const fixedCta = document.getElementById("fixed-cta");
 // 全画面を一旦非表示にし、対象画面だけ表示してアニメーションをやり直す
 // ============================================================
 function showScreen(targetScreen) {
-  [screenTop, screenQuiz, screenResult].forEach((screen) => {
+  allScreens.forEach((screen) => {
     screen.classList.remove("screen--active");
   });
 
@@ -55,7 +78,7 @@ function showScreen(targetScreen) {
 }
 
 // ============================================================
-// プログレスバー更新
+// プログレスバー更新（診断質問画面）
 // ============================================================
 function updateProgress() {
   const total = questions.length;
@@ -76,7 +99,6 @@ function renderQuestion() {
   updateProgress();
 
   // カードのアニメーションを再トリガー
-  quizCard.classList.remove("screen--active"); // 念のため
   quizCard.style.animation = "none";
   void quizCard.offsetWidth;
   quizCard.style.animation = "";
@@ -96,16 +118,63 @@ function handleAnswer(value) {
     currentIndex += 1;
     renderQuestion();
   } else {
-    // 最終問終了 → 結果画面へ（診断ロジックなし、常にエニピル表示）
-    goToResult();
+    // 最終問終了 → 解析演出画面へ
+    showLoading();
   }
 }
 
 // ============================================================
-// 結果画面表示
+// ① 解析演出画面の表示
+// プログレスバーと分析ステップを順番にアニメーションさせ、
+// 約1.5秒後に結果画面へ自動遷移する
 // ============================================================
-function goToResult() {
+function showLoading() {
+  showScreen(screenLoading);
+
+  // 状態をリセット
+  loadingBarFill.style.width = "0%";
+  loadingPercent.textContent = "0%";
+  loadingBarWrap.setAttribute("aria-valuenow", "0");
+  loadingSteps.forEach((step) => step.classList.remove("loading__step--visible"));
+
+  const stepCount = LOADING_PROGRESS_STEPS.length - 1; // 4ステップ
+  const intervalTime = LOADING_TOTAL_DURATION / stepCount;
+
+  LOADING_PROGRESS_STEPS.forEach((percent, i) => {
+    setTimeout(() => {
+      // プログレスバー更新
+      loadingBarFill.style.width = `${percent}%`;
+      loadingPercent.textContent = `${percent}%`;
+      loadingBarWrap.setAttribute("aria-valuenow", String(percent));
+
+      // 対応する分析ステップを表示（0%の初期表示分はスキップ）
+      if (i > 0 && loadingSteps[i - 1]) {
+        loadingSteps[i - 1].classList.add("loading__step--visible");
+      }
+    }, intervalTime * i);
+  });
+
+  // 解析演出終了後、結果画面へ
+  setTimeout(() => {
+    showResult();
+  }, LOADING_TOTAL_DURATION + 150); // 最後の表示が見える余白を少し追加
+}
+
+// ============================================================
+// ② タイプ診断カードの内容を描画
+// ============================================================
+function renderTypeCard() {
+  typeCardName.textContent = RESULT_TYPE.name;
+  typeCardDesc.textContent = RESULT_TYPE.desc;
+}
+
+// ============================================================
+// 結果画面表示（タイプカード描画＋固定CTA表示）
+// ============================================================
+function showResult() {
+  renderTypeCard();
   showScreen(screenResult);
+
   // 固定CTAを表示
   fixedCta.classList.add("fixed-cta--visible");
   fixedCta.setAttribute("aria-hidden", "false");
@@ -131,3 +200,4 @@ btnNo.addEventListener("click", () => handleAnswer("no"));
 // ============================================================
 fixedCta.classList.remove("fixed-cta--visible");
 fixedCta.setAttribute("aria-hidden", "true");
+

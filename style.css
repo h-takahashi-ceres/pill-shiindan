@@ -157,6 +157,12 @@ a:focus-visible {
   padding: 18px 24px;
   font-size: 18px;
   box-shadow: 0 6px 18px rgba(0, 200, 83, 0.4);
+  animation: ctaFloat 2.2s ease-in-out infinite;
+}
+
+@keyframes ctaFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 
 .btn--cta:hover {
@@ -298,10 +304,106 @@ a:focus-visible {
 }
 
 /* ============================================================
+  解析演出画面（loading）
+============================================================ */
+.loading {
+  padding: 72px 28px 40px;
+  text-align: center;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.loading__spinner {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 28px;
+  border: 5px solid #E2E8F0;
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading__title {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.loading__bar-wrap {
+  width: 100%;
+  height: 10px;
+  background: #E2E8F0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 32px;
+}
+
+.loading__bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-sub), var(--color-accent));
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.loading__percent {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-sub);
+}
+
+.loading__steps {
+  list-style: none;
+  margin-top: 32px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.loading__step {
+  font-size: 15px;
+  font-weight: 600;
+  color: #C5CDD2; /* 未表示時は薄いグレー */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease, color 0.3s ease;
+}
+
+.loading__step--visible {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--color-text);
+}
+
+.loading__check {
+  color: #C5CDD2;
+  font-weight: 900;
+  transition: color 0.3s ease;
+}
+
+.loading__step--visible .loading__check {
+  color: var(--color-accent);
+}
+
+/* ============================================================
   結果画面
 ============================================================ */
 .result {
-  padding: 40px 24px 24px;
+  padding: 32px 24px 24px;
   text-align: center;
 }
 
@@ -310,6 +412,7 @@ a:focus-visible {
   font-weight: 700;
   color: var(--color-sub);
   letter-spacing: 0.05em;
+  margin-bottom: 16px;
 }
 
 .result__heading {
@@ -317,6 +420,13 @@ a:focus-visible {
   font-size: 24px;
   font-weight: 800;
   line-height: 1.5;
+}
+
+.result__arrow {
+  margin: 24px 0 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-sub);
 }
 
 .result__logo-wrap {
@@ -379,6 +489,157 @@ a:focus-visible {
   font-size: 16px;
   font-weight: 700;
   line-height: 1.5;
+}
+
+/* ============================================================
+  ① タイプ診断カード
+============================================================ */
+.type-card {
+  position: relative;
+  padding: 32px 24px 28px;
+  text-align: center;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 200, 83, 0.15);
+  animation: typeCardPop 0.6s ease forwards;
+}
+
+@keyframes typeCardPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.type-card__icon {
+  position: absolute;
+  top: -16px;
+  left: -16px;
+  width: 40px;
+  height: 40px;
+  background: var(--color-accent);
+  color: var(--color-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 900;
+  box-shadow: 0 4px 10px rgba(0, 200, 83, 0.35);
+}
+
+.type-card__lead {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-sub);
+}
+
+.type-card__lead--end {
+  margin-top: 4px;
+}
+
+.type-card__name {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--color-accent);
+  line-height: 1.5;
+  margin: 6px 0;
+}
+
+.type-card__desc {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--color-text);
+  text-align: left;
+}
+
+/* ============================================================
+  おすすめポイントカード
+============================================================ */
+.point-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.point-card {
+  width: 100%;
+  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+}
+
+/* 順番に少し遅れて表示するアニメーション */
+.point-card--anim {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: pointCardIn 0.5s ease forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes pointCardIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.point-card__icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  background: var(--color-bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.point-card__text {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* ============================================================
+  ④ 安心感向上セクション（トラストカード）
+============================================================ */
+.trust-card {
+  padding: 24px 22px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.trust-card__text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--color-text);
+  margin-bottom: 16px;
+}
+
+.trust-card__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trust-card__list li {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-accent);
 }
 
 .result__bottom-space {
