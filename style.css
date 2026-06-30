@@ -1,0 +1,416 @@
+/* ============================================================
+  共通設定
+============================================================ */
+:root {
+  --color-accent: #00C853;     /* CTA・メインアクセント */
+  --color-start-btn: #0DB14B;  /* 診断スタートボタン */
+  --color-sub: #3F8CFF;        /* サブカラー */
+  --color-bg: #F7FAFC;         /* 背景 */
+  --color-text: #1A2B33;
+  --color-text-sub: #5C6B73;
+  --color-white: #FFFFFF;
+  --radius-card: 16px;
+  --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --max-width: 430px; /* 390px基準＋少し余裕 */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* フォーカスリング（アクセシビリティ） */
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--color-sub);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+  全体ラッパー
+============================================================ */
+.app {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+/* ============================================================
+  画面切り替え（screen）
+  ・非表示画面は display:none
+  ・表示画面に screen--active クラスを付与してアニメーション
+============================================================ */
+.screen {
+  display: none;
+}
+
+.screen--active {
+  display: block;
+  animation: fadeSlideUp 0.5s ease forwards;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+  共通ボタン
+============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 999px;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+/* 診断スタートボタン */
+.btn--start {
+  width: 100%;
+  background: var(--color-start-btn);
+  color: var(--color-white);
+  padding: 18px 24px;
+  box-shadow: 0 6px 16px rgba(13, 177, 75, 0.35);
+}
+
+.btn--start:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(13, 177, 75, 0.4);
+}
+
+/* YES / NOボタン */
+.btn--answer {
+  flex: 1;
+  padding: 18px 0;
+  font-size: 18px;
+  color: var(--color-white);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn--no {
+  background: #B0BEC5;
+}
+
+.btn--no:hover {
+  background: #9AAAB2;
+}
+
+.btn--yes {
+  background: var(--color-accent);
+}
+
+.btn--yes:hover {
+  background: #00B14A;
+}
+
+/* CTAボタン（固定） */
+.btn--cta {
+  width: 100%;
+  background: var(--color-accent);
+  color: var(--color-white);
+  padding: 18px 24px;
+  font-size: 18px;
+  box-shadow: 0 6px 18px rgba(0, 200, 83, 0.4);
+}
+
+.btn--cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 200, 83, 0.45);
+}
+
+/* ============================================================
+  ファーストビュー
+============================================================ */
+.fv {
+  padding: 48px 24px 32px;
+  text-align: center;
+}
+
+.fv__badge {
+  display: inline-block;
+  background: rgba(63, 140, 255, 0.1);
+  color: var(--color-sub);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+.fv__title {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.fv__title--accent {
+  color: var(--color-accent);
+}
+
+.fv__sub {
+  margin-top: 16px;
+  font-size: 16px;
+  color: var(--color-text-sub);
+  font-weight: 600;
+}
+
+.fv__visual {
+  margin: 32px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.fv__circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0,200,83,0.15), rgba(63,140,255,0.15));
+  position: relative;
+}
+
+.fv__circle::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  color: var(--color-accent);
+  font-weight: 900;
+}
+
+.fv__note {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--color-text-sub);
+}
+
+/* ============================================================
+  プログレスバー
+============================================================ */
+.progress {
+  padding: 24px 24px 8px;
+}
+
+.progress__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-sub);
+  margin-bottom: 8px;
+}
+
+.progress__bar {
+  width: 100%;
+  height: 8px;
+  background: #E2E8F0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress__fill {
+  height: 100%;
+  width: 0%;
+  background: var(--color-accent);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* ============================================================
+  診断カード
+============================================================ */
+.quiz-card-area {
+  padding: 16px 24px 24px;
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+}
+
+.quiz-card {
+  padding: 40px 24px 28px;
+  text-align: center;
+}
+
+.quiz-card__question {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.5;
+  min-height: 168px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quiz-card__buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+/* ============================================================
+  結果画面
+============================================================ */
+.result {
+  padding: 40px 24px 24px;
+  text-align: center;
+}
+
+.result__eyebrow {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-sub);
+  letter-spacing: 0.05em;
+}
+
+.result__heading {
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.result__logo-wrap {
+  margin: 28px auto;
+  background: var(--color-white);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+}
+
+.result__title {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.result__title--brand {
+  color: var(--color-accent);
+  font-size: 26px;
+}
+
+/* おすすめポイントカード */
+.point-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.point-card {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+}
+
+.point-card__icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  background: var(--color-bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.point-card__text {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.result__bottom-space {
+  height: 90px; /* 固定CTAとの重なり防止 */
+}
+
+/* ============================================================
+  固定CTA
+============================================================ */
+.fixed-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background: linear-gradient(to top, var(--color-white) 70%, rgba(255,255,255,0));
+  padding: 16px 24px 20px;
+  display: none; /* 結果画面表示時にJSでflexに切替 */
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.fixed-cta--visible {
+  display: block;
+}
+
+/* ============================================================
+  レスポンシブ（PC等やや広い画面でも崩れないように）
+============================================================ */
+@media (min-width: 480px) {
+  .app {
+    box-shadow: var(--shadow-soft);
+    background: var(--color-bg);
+  }
+}
