@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>30秒診断｜あなたに合うオンラインピルは？</title>
+<!-- SEO不要のためdescription等は省略。読み込み速度優先で外部ライブラリ未使用 -->
+<link rel="preconnect" href="https://any-pill.com">
+<style>
+  /* style.css の内容をここに統合可能。今回は外部ファイル参照 */
+</style>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================
+  全体ラッパー（横幅390px基準・中央寄せ）
+============================================ -->
+<div class="app">
+
+  <!-- ============================================
+    画面1：ファーストビュー
+  ============================================ -->
+  <section id="screen-top" class="screen screen--active" aria-label="トップ画面">
+    <div class="fv">
+      <p class="fv__badge">無料・30秒で完了</p>
+      <h1 class="fv__title">
+        30秒で診断！<br>
+        あなたに合う<br>
+        <span class="fv__title--accent">オンラインピル</span>は？
+      </h1>
+      <p class="fv__sub">5つの質問に答えるだけ</p>
+
+      <div class="fv__visual" aria-hidden="true">
+        <div class="fv__circle"></div>
+      </div>
+
+      <button type="button" id="btn-start" class="btn btn--start" aria-label="診断をスタートする">
+        診断スタート
+      </button>
+      <p class="fv__note">※個人情報の入力は一切不要です</p>
+    </div>
+  </section>
+
+  <!-- ============================================
+    画面2：診断（質問カード）
+  ============================================ -->
+  <section id="screen-quiz" class="screen" aria-label="診断質問画面">
+
+    <!-- プログレスバー -->
+    <div class="progress" aria-live="polite">
+      <p class="progress__label" id="progress-label">質問 1 / 5</p>
+      <div class="progress__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-wrap">
+        <div class="progress__fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- 質問カード（JSで内容を差し替え） -->
+    <div class="quiz-card-area">
+      <div class="card quiz-card" id="quiz-card">
+        <p class="quiz-card__question" id="quiz-question">
+          私は30歳以下の女性だ
+        </p>
+
+        <div class="quiz-card__buttons">
+          <button type="button" class="btn btn--answer btn--no" id="btn-no" aria-label="NOと回答する">
+            NO
+          </button>
+          <button type="button" class="btn btn--answer btn--yes" id="btn-yes" aria-label="YESと回答する">
+            YES
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+    画面3：解析演出画面（設問5回答直後〜約1.5秒）
+  ============================================ -->
+  <section id="screen-loading" class="screen" aria-label="解析中画面">
+    <div class="loading">
+      <div class="loading__spinner" aria-hidden="true"></div>
+      <p class="loading__title">あなたに最適な<br>オンラインピルを診断しています</p>
+
+      <div class="loading__bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="loading-bar-wrap">
+        <div class="loading__bar-fill" id="loading-bar-fill"></div>
+      </div>
+      <p class="loading__percent" id="loading-percent">0%</p>
+
+      <!-- 分析項目（JSで1つずつ表示） -->
+      <ul class="loading__steps" id="loading-steps">
+        <li class="loading__step" data-step="0"><span class="loading__check">✓</span>年齢を分析...</li>
+        <li class="loading__step" data-step="1"><span class="loading__check">✓</span>希望条件を分析...</li>
+        <li class="loading__step" data-step="2"><span class="loading__check">✓</span>利便性を分析...</li>
+        <li class="loading__step" data-step="3"><span class="loading__check">✓</span>安全性を分析...</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================
+    画面4：結果画面
+  ============================================ -->
+  <section id="screen-result" class="screen" aria-label="診断結果画面">
+    <div class="result">
+
+      <p class="result__eyebrow">診断結果</p>
+
+      <!-- ① タイプ診断カード -->
+      <div class="card type-card" id="type-card">
+        <div class="type-card__icon" aria-hidden="true">✓</div>
+        <p class="type-card__lead">あなたは</p>
+        <p class="type-card__name" id="type-card-name">【安心・時短重視タイプ】</p>
+        <p class="type-card__lead">でした！</p>
+        <p class="type-card__desc" id="type-card-desc">
+          あなたは、安心して利用できることと、忙しい毎日でも無理なく続けられるサービスを重視する傾向があります。
+        </p>
+      </div>
+
+      <p class="result__arrow">そんなあなたには</p>
+
+      <!-- ① 結果画像：images/anypill-result.jpg -->
+      <div class="result__image-wrap">
+        <img
+          class="result__image"
+          src="images/anypill-result.jpg"
+          alt="エニピル オンラインピル処方"
+          width="390"
+          height="auto"
+          loading="eager"
+        >
+      </div>
+
+      <h3 class="result__title">
+        オンラインピル処方<br>
+        <span class="result__title--brand">「エニピル」</span>
+      </h3>
+
+      <!-- ③ おすすめポイント カード×3（横いっぱい・順次表示） -->
+      <div class="point-cards" id="point-cards">
+
+        <div class="card point-card point-card--anim" style="--delay:0s;">
+          <div class="point-card__icon" aria-hidden="true">💊</div>
+          <p class="point-card__text">
+            副作用対策薬セットで<br>国内最安クラス！
+          </p>
+        </div>
+
+        <div class="card point-card point-card--anim" style="--delay:0.1s;">
+          <div class="point-card__icon" aria-hidden="true">👩‍⚕️</div>
+          <p class="point-card__text">
+            産婦人科医在籍<br>安心の上場企業運営
+          </p>
+        </div>
+
+        <div class="card point-card point-card--anim" style="--delay:0.2s;">
+          <div class="point-card__icon" aria-hidden="true">📱</div>
+          <p class="point-card__text">
+            最短10分<br>オンライン診療
+          </p>
+        </div>
+
+      </div>
+
+      <!-- ④ 安心感向上セクション -->
+      <div class="card trust-card">
+        <p class="trust-card__text">
+          診断お疲れ様でした。<br>
+          あなたの診断結果に最も適したサービスとして<br>
+          エニピルをご紹介しています。
+        </p>
+        <ul class="trust-card__list">
+          <li>✔ オンライン完結</li>
+          <li>✔ 自宅から受診可能</li>
+          <li>✔ プライバシー配送対応</li>
+        </ul>
+      </div>
+
+      <!-- 固定CTAとの重なりを避けるための余白 -->
+      <div class="result__bottom-space" aria-hidden="true"></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============================================
+  固定CTA（結果画面でのみ表示）
+============================================ -->
+<div class="fixed-cta" id="fixed-cta" aria-hidden="true">
+  <a
+    href="https://any-pill.com/lp/low/tp-585-ab1/?AP14_SLS_GLIS_000_LPF_LOW_SH_b"
+    target="_blank"
+    rel="noopener"
+    class="btn btn--cta"
+    id="cta-link"
+    aria-label="エニピルの詳細を見る（外部サイトが開きます）"
+  >
+    詳しく見る
+  </a>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
